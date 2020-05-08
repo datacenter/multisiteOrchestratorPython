@@ -11,7 +11,7 @@ import json
 
 class RestClient(object):
     """
-    A client class for communicating with the MSO REST API.
+    A class for communicating with the MSO REST API using any of the SUPPORTED_METHODS below.
     
     Attributes:
         server_endpoint: string of API URL to query
@@ -24,27 +24,28 @@ class RestClient(object):
         SUPPORTED_METHODS: list of supported HTTP methods
     """
 
-    SUPPORTED_METHODS = ['GET', 'POST', 'PUT', 'PATCH']
+    SUPPORTED_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
     def __init__(self, server_endpoint, admin_user, admin_password, **kwargs):
         """
         Init gets a bearer auth token first. That is required to interact with the API.
         In this version, login domains are not implemented. Local auth only for now.
+        The bearer is then used when building HTTP requests for any of the SUPPORTED_METHODS.
 
-        Example use case:
+        Example:
         rc = RestClient("my-mso.example.org", # https is always prefixed
-                        "admin", # api_key
-                        "cisco123", # api_secret
-                        verify = False) # disable SSL certification verification
+                        "admin",              # api user
+                        "cisco123",           # api user password
+                        verify = False)       # disable SSL certification verification
 
 
         Args:
             server_endpoint: string of the server URL to query
-            admin_user: string of admin user
-            admin_password: string of admin password
+            admin_user:      string of admin user
+            admin_password:  string of admin password
             kwargs:
                 api_version: API Version
-                verify: boolean to verify SSL cerfications
+                verify:      boolean to verify SSL cerfications
         """
         self.server_endpoint = server_endpoint
         self.uri_prefix = '/api/' + kwargs.get('api_version', 'v1')
@@ -53,10 +54,11 @@ class RestClient(object):
         self.verify = kwargs.get('verify', False)
         self.session = requests.Session()
         self.protocol = 'https'
-        self.bearer = self.login(server_endpoint, admin_user, admin_password)
+        self.bearer = self.__login(server_endpoint, admin_user, admin_password)
 
-    def login(self, server_endpoint, admin_user, admin_password):
-        loggedIn = self.msoLogMeIn(server_endpoint, admin_user, admin_password)
+    def __login(self, server_endpoint, admin_user, admin_password):
+        # __login is called by __init__ only
+        loggedIn = self.__msoLogMeIn(server_endpoint, admin_user, admin_password)
         if loggedIn:
             return loggedIn
         else:
@@ -95,7 +97,7 @@ class RestClient(object):
 
         return self.session.send(req, verify=self.verify)
 
-    def msoLogMeIn(self, ip_addr, username, password):
+    def __msoLogMeIn(self, ip_addr, username, password):
         url = self.protocol + '://' + ip_addr + '/api/v1/auth/login'
         json_creds = '{"username" : "%s", "password" : "%s"}' % (username, password)
         mso_headers = {   'Host': ip_addr, \
