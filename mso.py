@@ -29,6 +29,7 @@ class RestClient(object):
     def __init__(self, server_endpoint, admin_user, admin_password, **kwargs):
         """
         Init gets a bearer auth token first. That is required to interact with the API.
+        In this version, login domains are not implemented. Local auth only for now.
 
         Example use case:
         rc = RestClient("my-mso.example.org", # https is always prefixed
