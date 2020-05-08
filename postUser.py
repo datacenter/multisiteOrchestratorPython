@@ -12,7 +12,13 @@ except ImportError:
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 rc = mso.RestClient(MSO_IP, MSO_ADMIN, MSO_PASSWORD)
-true = 1
+
+roles = rc.get('/roles')
+rolesJson = json.loads(roles.text)
+for role in rolesJson['roles']:
+    if role['name'] == 'powerUser':
+        roleId = role['id']
+
 userJson = {"lastName":"Testing",
             "username":"test",
             "phoneNumber":"555-123-456",
@@ -21,7 +27,7 @@ userJson = {"lastName":"Testing",
             "firstName":"Subject",
             "confirmPassword":"cisco123!!!!",
             "password":"cisco123!!!!",
-            "roles":[ {"roleId":"0000ffff0000000000000031",
+            "roles":[ {"roleId":roleId,
                        "accessType":"readOnly"}],
             "accountStatus":"active"}
 
