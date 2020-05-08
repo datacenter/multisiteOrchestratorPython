@@ -92,9 +92,8 @@ class RestClient(object):
         json_body = args.get('json_body', '')
         unprep_req = requests.Request(
             http_method, self.protocol + '://' + self.server_endpoint + uri_path, params=params,
-            data=json_body, headers=auth_header)
+            json=json_body, headers=auth_header)
         req = self.session.prepare_request(unprep_req)
-
         return self.session.send(req, verify=self.verify)
 
     def __msoLogMeIn(self, ip_addr, username, password):
@@ -131,6 +130,38 @@ class RestClient(object):
         """
         return self.make_http_request(
             http_method='GET', uri_path=self.uri_prefix + uri_path, args=kwargs)
+
+    def patch(self, uri_path='', **kwargs):
+        """
+        PATCH request to the server. Returns a requests.Response.
+
+        Args:
+            uri_path: string URI path for query
+            kwargs:
+                params: additional dictionary of parameters for GET
+                json_body: string JSON body
+
+        Returns:
+            requests.Response object for the request
+        """
+        return self.make_http_request(
+            http_method='PATCH', uri_path=self.uri_prefix + uri_path, args=kwargs)
+    
+    def delete(self, uri_path='', **kwargs):
+        """
+        DELETE request to the server. Returns a requests.Response.
+
+        Args:
+            uri_path: string URI path for query
+            kwargs:
+                params: additional dictionary of parameters for GET
+                json_body: string JSON body
+
+        Returns:
+            requests.Response object for the request
+        """
+        return self.make_http_request(
+            http_method='DELETE', uri_path=self.uri_prefix + uri_path, args=kwargs)
 
     def post(self, uri_path='', **kwargs):
         """
