@@ -16,4 +16,12 @@ rc = mso.RestClient(MSO_IP, MSO_ADMIN, MSO_PASSWORD)
 
 # first, let's list all users
 resp = rc.get('/sites')
-pprint.pprint(json.loads(resp.text))
+allSites = json.loads(resp.text)
+for site in allSites['sites']:
+    queryString = '/sites/' + site['id']
+    siteInfo = rc.get(queryString)
+    print("Site {} info".format(site['id']))
+    print(80 * "=")
+    pprint.pprint(json.loads(siteInfo.text))
+
+
