@@ -20,8 +20,10 @@ allSites = json.loads(resp.text)
 for site in allSites['sites']:
     queryString = '/sites/' + site['id']
     siteInfo = rc.get(queryString)
-    print("Site {} info".format(site['id']))
+    siteData = json.loads(siteInfo.text)
+    siteName = siteData['name']
+    print("Site {} [name {}] info".format(site['id'],siteName))
     print(80 * "=")
-    pprint.pprint(json.loads(siteInfo.text))
+    pprint.pprint(siteData)
 
 
