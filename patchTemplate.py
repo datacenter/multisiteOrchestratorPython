@@ -24,21 +24,17 @@ for schema in schemasJson['schemas']:
 
 print("Schema has id {} and site is {}".format(schemaId,siteId))
 
-path = '/sites/' + siteId + '-' + templateName + '/anps/ap_one/epgs/epg_one/-'
+path = '/sites/' + siteId + '-' + templateName + '/anps/ap_one/epgs/epg_one/staticPorts/-'
 
 patchSet = [{ "op": "add",
              "path": path,
              "value": {
-                        "staticPorts": [
-                          {
                             "type": "port",
                             "path": "topology/pod-1/paths-101/pathep-[eth1/17]",
                             "portEncapVlan": 51,
                             "deploymentImmediacy": "immediate",
                             "mode": "regular"
                           }
-                        ] 
-                      }
            }]
 
 url = '/schemas/' + schemaId
