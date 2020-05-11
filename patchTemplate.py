@@ -29,36 +29,28 @@ print("Schema has id {} and site is {}".format(schemaId, siteId))
 # let's add three static paths to an EPG in Template1
 path = '/sites/' + siteId + '-' + templateName + \
     '/anps/ap_one/epgs/epg_one/staticPorts/-'
-patchSet = [{"op": "add",
-             "path": path,
-             "value": {
-                 "type": "port",
-                 "path": "topology/pod-1/paths-101/pathep-[eth1/17]",
-                 "portEncapVlan": 51,
-                 "deploymentImmediacy": "immediate",
-                 "mode": "regular"
-             }
-             },
-            {"op": "add",
-             "path": path,
-             "value": {
-                 "type": "port",
-                 "path": "topology/pod-1/paths-101/pathep-[eth1/18]",
-                 "portEncapVlan": 52,
-                 "deploymentImmediacy": "immediate",
-                 "mode": "regular"
-             }
-             },
-            {"op": "add",
-             "path": path,
-             "value": {
-                 "type": "port",
-                 "path": "topology/pod-1/paths-101/pathep-[eth1/19]",
-                 "portEncapVlan": 53,
-                 "deploymentImmediacy": "immediate",
-                 "mode": "regular"
-             }
-             }]
+
+baseVlan = 50
+baseInterface = 17
+pathCount = 5
+patchSet = []
+
+for i in range(pathCount):
+    print(i)
+    pathPath = 'topology/pod-1/paths-101/pathep-[eth1/%s]' % str(
+        baseInterface+i)
+    pathVlan = baseVlan+i
+    pathItem = {"op": "add",
+                "path": path,
+                "value": {
+                    "type": "port",
+                    "path": pathPath,
+                    "portEncapVlan": pathVlan,
+                    "deploymentImmediacy": "immediate",
+                    "mode": "regular"
+                }
+                }
+    patchSet.append(pathItem)
 
 url = '/schemas/' + schemaId
 resp = rc.patch(url, json_body=patchSet)
