@@ -24,40 +24,57 @@ for schema in schemasJson['schemas']:
         # for sake of simplicity we are retrieving the first site only
         siteId = schema['sites'][0]['siteId']
 
-print("Schema has id {} and site is {}".format(schemaId,siteId))
+print("Schema has id {} and site is {}".format(schemaId, siteId))
 
-# let's add a static path to an EPG in Template1
-path = '/sites/' + siteId + '-' + templateName + '/anps/ap_one/epgs/epg_one/staticPorts/-'
-patchSet = [{ "op": "add",
-              "path": path,
-              "value": {
-                            "type": "port",
-                            "path": "topology/pod-1/paths-101/pathep-[eth1/17]",
-                            "portEncapVlan": 51,
-                            "deploymentImmediacy": "immediate",
-                            "mode": "regular"
-                          }
-           }]
+# let's add three static paths to an EPG in Template1
+path = '/sites/' + siteId + '-' + templateName + \
+    '/anps/ap_one/epgs/epg_one/staticPorts/-'
+patchSet = [{"op": "add",
+             "path": path,
+             "value": {
+                 "type": "port",
+                 "path": "topology/pod-1/paths-101/pathep-[eth1/17]",
+                 "portEncapVlan": 51,
+                 "deploymentImmediacy": "immediate",
+                 "mode": "regular"
+             }
+             },
+            {"op": "add",
+             "path": path,
+             "value": {
+                 "type": "port",
+                 "path": "topology/pod-1/paths-101/pathep-[eth1/18]",
+                 "portEncapVlan": 52,
+                 "deploymentImmediacy": "immediate",
+                 "mode": "regular"
+             }
+             },
+            {"op": "add",
+             "path": path,
+             "value": {
+                 "type": "port",
+                 "path": "topology/pod-1/paths-101/pathep-[eth1/19]",
+                 "portEncapVlan": 53,
+                 "deploymentImmediacy": "immediate",
+                 "mode": "regular"
+             }
+             }]
 
 url = '/schemas/' + schemaId
 resp = rc.patch(url, json_body=patchSet)
 print("\n")
 pprint.pprint(json.loads(resp.text))
-delOp = input("Check MSO for new static path under EPG. Delete new path now? [Y/N]")
+delOp = input(
+    "Check MSO for new static path under EPG. Delete path #2 now? [Y/N]")
 if delOp == 'Y':
-    path = '/sites/' + siteId + '-' + templateName + '/anps/ap_one/epgs/epg_one/staticPorts/'
-    patchSet = [{ "op": "remove",
-                  "path": path,
-                  "value": {
-                            "type": "port",
-                            "path": "topology/pod-1/paths-101/pathep-[eth1/17]",
-                            "portEncapVlan": 51,
-                            "deploymentImmediacy": "immediate",
-                            "mode": "regular"
-                          }
-               }]
+    path = '/sites/' + siteId + '-' + templateName + \
+        '/anps/ap_one/epgs/epg_one/staticPorts/2'
+    patchSet = [{"op": "remove",
+                 "path": path,
+                 "value": {
+                 }
+                 }]
 
     resp = rc.patch(url, json_body=patchSet)
     pprint.pprint(json.loads(resp.text))
-    print("Path removed")
-
+    print("Path #2 removed")
