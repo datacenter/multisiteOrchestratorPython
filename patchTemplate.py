@@ -57,16 +57,13 @@ resp = rc.patch(url, json_body=patchSet)
 print("\n")
 pprint.pprint(json.loads(resp.text))
 delOp = input(
-    "Check MSO for new static path under EPG. Delete path #2 now? [Y/N]")
+    "Check MSO for new static path under EPG. Delete paths now? [Y/N]")
 if delOp == 'Y':
     path = '/sites/' + siteId + '-' + templateName + \
-        '/anps/ap_one/epgs/epg_one/staticPorts/2'
+        '/anps/ap_one/epgs/epg_one/staticPorts/'
     patchSet = [{"op": "remove",
                  "path": path,
-                 "value": {
-                 }
+                 "value": {}
                  }]
-
     resp = rc.patch(url, json_body=patchSet)
-    pprint.pprint(json.loads(resp.text))
-    print("Path #2 removed")
+    print("Paths removed")
