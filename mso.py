@@ -100,13 +100,13 @@ class RestClient(object):
         url = self.protocol + '://' + ip_addr + '/login'
         json_creds = '{"username" : "%s", "password" : "%s"}' % (username, password)
         mso_headers = { 'Accept':'*/*',
-                    'Accept-Encoding':'gzip,deflate,br',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Host': ip_addr,
-                    'Origin': 'https://'+ip_addr,
-                    'Content-Type': 'application/json',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
-                    'Referer': 'https://'+ip_addr  }
+                        'Accept-Encoding':'gzip,deflate,br',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                        'Host': ip_addr,
+                        'Origin': 'https://'+ip_addr,
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
+                        'Referer': 'https://'+ip_addr  }
  
         req = requests.post(url, data=json_creds, verify=False, headers=mso_headers)
         
