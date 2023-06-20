@@ -48,7 +48,7 @@ class RestClient(object):
                 verify:      boolean to verify SSL cerfications
         """
         self.server_endpoint = server_endpoint
-        self.uri_prefix = '/api/' + kwargs.get('api_version', 'v1')
+        self.uri_prefix = '/mso/api/' + kwargs.get('api_version', 'v1')
         self.admin_user = admin_user
         self.admin_password = admin_password
         self.verify = kwargs.get('verify', False)
@@ -97,19 +97,20 @@ class RestClient(object):
         return self.session.send(req, verify=self.verify)
 
     def __msoLogMeIn(self, ip_addr, username, password):
-        url = self.protocol + '://' + ip_addr + '/api/v1/auth/login'
+        url = self.protocol + '://' + ip_addr + '/login'
         json_creds = '{"username" : "%s", "password" : "%s"}' % (username, password)
-        mso_headers = {   'Host': ip_addr, \
-                          'Origin': 'https://'+ip_addr, \
-                          'Content-Type': 'application/json;charset=UTF-8', \
-                          'Accept-Language': 'en-US,en;q=0.8,fr;q=0.6,nl;q=0.4', \
-                          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/61.0.3163.100 Safari/537.36', \
-                          'Referer': 'https://'+ip_addr, \
-                          'Accept':'*/*'}
+        mso_headers = { 'Accept':'*/*',
+                    'Accept-Encoding':'gzip,deflate,br',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Host': ip_addr,
+                    'Origin': 'https://'+ip_addr,
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51',
+                    'Referer': 'https://'+ip_addr  }
  
         req = requests.post(url, data=json_creds, verify=False, headers=mso_headers)
         
-        if req.status_code == 201:
+        if req.status_code == 200:
             retval = json.loads(req.text)
             return(retval['token'])
         else:
@@ -195,4 +196,3 @@ class RestClient(object):
         return self.make_http_request(
             http_method='PUT', uri_path=self.uri_prefix + uri_path,
             args=kwargs)
-

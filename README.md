@@ -4,7 +4,22 @@ Using this code you can easily interact with MSO's REST API.
 
 ## How-to
 
-Just populate **credentials.py** with your MSO's IP address, username and password.
+Just populate **credentials.py** with your MSO's IP address, and username.
+
+Add Your Password to the environment
+
+* Linux
+
+```bash
+export MSO_PASSWORD='<your-password>'
+```
+
+* Windows
+
+```PowerShell
+$env:MSO_PASSWORD='<your-password>'
+```
+
 Import mso.py in your code and instantiate a REST client like so:
 
 ```
